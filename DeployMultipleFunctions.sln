@@ -5,7 +5,9 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolidFunctions", "SolidFunctions\SolidFunctions.csproj", "{14426958-1708-477C-B30C-7400858E140B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiquidFunctions", "LiquidFunctions\LiquidFunctions.csproj", "{FFCABFDF-0944-42AC-A4A6-264411211629}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiquidFunctions", "LiquidFunctions\LiquidFunctions.csproj", "{FFCABFDF-0944-42AC-A4A6-264411211629}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolidusFunctions", "SolidusFunctions\SolidusFunctions.csproj", "{BD99EA69-C15B-4659-AC89-38D307C614A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{FFCABFDF-0944-42AC-A4A6-264411211629}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFCABFDF-0944-42AC-A4A6-264411211629}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFCABFDF-0944-42AC-A4A6-264411211629}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD99EA69-C15B-4659-AC89-38D307C614A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD99EA69-C15B-4659-AC89-38D307C614A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD99EA69-C15B-4659-AC89-38D307C614A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD99EA69-C15B-4659-AC89-38D307C614A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
