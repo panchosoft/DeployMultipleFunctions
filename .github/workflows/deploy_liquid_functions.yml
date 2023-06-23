@@ -11,7 +11,7 @@ on:
     # Allows you to run this workflow manually from the Actions tab
     workflow_dispatch:
       inputs:
-        # The GitHub and Azure environment to deploy the Azure function
+        # Update API Manager with the function endpoints (OpenAPI)
         update_api:
           type: choice
           required: true
@@ -43,7 +43,7 @@ jobs:
       - name: 'Login via Azure CLI'
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }} # Your Azure credentials
 
       # Setup dotnet command
       - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
@@ -86,7 +86,7 @@ jobs:
         AZURE_API_ID: 'liquid-api'
         AZURE_API_PATH: '/liquid'
         AZURE_API_NAME: 'Liquid API'
-        AZURE_API_SPEC_URL: 'https://${{ env.AZURE_FUNCTIONAPP_NAME }}.azurewebsites.net/api/openapi/v3.json'
+        AZURE_API_SPEC_URL: 'https://$AZURE_FUNCTIONAPP_NAME.azurewebsites.net/api/openapi/v3.json'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
