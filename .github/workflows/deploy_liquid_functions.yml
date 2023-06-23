@@ -1,0 +1,108 @@
+# GitHub action that builds and deploys an Azure Function App
+# Author: Francisco Leyva
+name: Deploy Liquid Functions to Azure
+
+# Controls when the workflow will run
+on:
+    # Triggers the workflow on push or pull request events but only for the "main" branch
+    push:
+        branches: [ "main" ]
+
+    # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
+      inputs:
+        # The GitHub and Azure environment to deploy the Azure function
+        update_api:
+          type: choice
+          required: true
+          default: 'No'
+          description: Update API Endpoints
+          options: 
+          - Yes
+          - No
+
+env:
+    # Azure functions configuration
+    AZURE_FUNCTIONAPP_NAME : 'function-liquid-dev'
+    AZURE_FUNCTIONAPP_PACKAGE_PATH: 'LiquidFunctions' # set this to the path to your web app project, defaults to the repository root
+    DOTNET_VERSION: '6.0.x' # set this to the dotnet version to use
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This job builds and deploy an azure function to Azure
+  build-and-deploy:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Login to Azure using secrets credentials
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Setup dotnet command
+      - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      # Build Azure Function
+      - name: 'Run dotnet'
+        shell: pwsh
+        run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          dotnet build --configuration Release --output ./output
+          popd
+      # Deploy build to Azure function app environment
+      - name: 'Run Azure Functions Action'
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+          package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
+  
+       # Azure logout
+      - name: logout
+        run: |
+              az logout
+        if: always()
+
+  # This job updates the Azure (APIM) API with the OpenAPI definition file
+  # coming from the Azure Function
+  update-api:
+    # The type of runner that the job will run on
+    needs: build-and-deploy
+    runs-on: ubuntu-latest
+    if: inputs.update_api == 'Yes'
+
+    env: 
+        # Azure API Import configuration (optional)
+        AZURE_RG: 'azure-resource-group' # Resource group name
+        AZURE_API_SERVICE: 'api-manager-name' # API Manager ID
+        AZURE_API_ID: 'liquid-api'
+        AZURE_API_PATH: '/liquid'
+        AZURE_API_NAME: 'Liquid API'
+        AZURE_API_SPEC_URL: 'https://${{ env.AZURE_FUNCTIONAPP_NAME }}.azurewebsites.net/api/openapi/v3.json'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Login to Azure using secrets credentials
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Run Azure CLI command to import an API definition from an OpenID definition file
+      - name: Run Azure API Import (CLI)
+        run: |
+          az apim api import --path $env:AZURE_API_PATH --api-id $env:AZURE_API_ID -g $env:AZURE_RG -n $env:AZURE_API_SERVICE --display-name "$env:AZURE_API_NAME" --specification-url "$env:AZURE_API_SPEC_URL" --specification-format OpenAPI --protocols https
+       
+      # Azure logout
+      - name: logout
+        run: |
+              az logout
+        if: always()
