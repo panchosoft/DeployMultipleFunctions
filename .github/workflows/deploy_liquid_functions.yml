@@ -13,13 +13,10 @@ on:
       inputs:
         # Update API Manager with the function endpoints (OpenAPI)
         update_api:
-          type: choice
+          type: boolean
           required: true
-          default: 'No'
+          default: false
           description: Update API Endpoints
-          options: 
-            - Yes
-            - No
 
 env:
     # Azure functions configuration
