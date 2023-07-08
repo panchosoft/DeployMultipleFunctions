@@ -81,8 +81,8 @@ jobs:
 
     env: 
         # Azure API Import configuration (optional)
-        AZURE_RG: 'azure-resource-group' # Resource group name
-        AZURE_API_SERVICE: 'api-manager-name' # API Manager ID
+        AZURE_RG: 'rg-panchosoft-dev' # Resource group name
+        AZURE_API_SERVICE: 'apim-panchosoft-dev' # API Manager ID
         AZURE_API_ID: 'liquid-api'
         AZURE_API_PATH: '/liquid'
         AZURE_API_NAME: 'Liquid API'
