@@ -1,0 +1,73 @@
+# GitHub action that builds and deploys an Azure Function App
+# Author: Francisco Leyva
+name: Deploy Liquid Functions to Azure
+
+# Controls when the workflow will run
+on:
+    # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
+      inputs:
+        # Update API Manager with the function endpoints (OpenAPI)
+        update_api:
+          type: boolean
+          required: true
+          default: false
+          description: Update API Endpoints
+
+env:
+    DOTNET_VERSION: '6.0.x' # set this to the dotnet version to use
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This job builds and deploy an azure function to Azure
+  build-and-deploy:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    
+    # Functions configurations
+    strategy:
+      matrix:
+        include:
+          - function_name: 'fn-liquid-dev'
+            package_path: 'LiquidFunctions'
+          - function_name: 'fn-solid-dev'
+            package_path: 'SolidFunctions'
+          - function_name: 'fn-solidus-dev'
+            package_path: 'SolidusFunctions'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Login to Azure using secrets credentials
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }} # Your Azure credentials
+
+      # Setup dotnet command
+      - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      # Build Azure Function
+      - name: 'Run dotnet'
+        shell: pwsh
+        run: |
+          pushd './${{ matrix.package_path }}'
+          dotnet build --configuration Release --output ./output
+          popd
+      # Deploy build to Azure function app environment
+      - name: 'Run Azure Functions Action'
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ matrix.function_name }}
+          package: '${{ matrix.package_path }}/output'
+  
+       # Azure logout
+      - name: logout
+        run: |
+              az logout
+        if: always()
