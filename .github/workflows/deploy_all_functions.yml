@@ -1,6 +1,6 @@
 # GitHub action that builds and deploys an Azure Function App
 # Author: Francisco Leyva
-name: Deploy Liquid Functions to Azure
+name: Deploy All Functions to Azure
 
 # Controls when the workflow will run
 on:
