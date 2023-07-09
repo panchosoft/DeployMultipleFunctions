@@ -96,7 +96,7 @@ jobs:
       # Run Azure CLI command to import an API definition from an OpenID definition file
       - name: Run Azure API Import (CLI)
         run: |
-          az apim api import --path $env:AZURE_API_PATH --api-id $env:AZURE_API_ID -g $env:AZURE_RG -n $env:AZURE_API_SERVICE --display-name "$env:AZURE_API_NAME" --specification-url "$env:AZURE_API_SPEC_URL" --specification-format OpenAPI --protocols https
+          az apim api import --path $AZURE_API_PATH --api-id $AZURE_API_ID -g $AZURE_RG -n $AZURE_API_SERVICE --display-name "$AZURE_API_NAME" --specification-url "$AZURE_API_SPEC_URL" --specification-format OpenAPI --protocols https
        
       # Azure logout
       - name: logout
