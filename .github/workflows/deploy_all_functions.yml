@@ -71,3 +71,56 @@ jobs:
         run: |
               az logout
         if: always()
+        
+  # This job updates the Azure (APIM) API with the OpenAPI definition file
+  # coming from the Azure Function
+  update-api:
+    needs: build-and-deploy
+    if: inputs.update_api
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    
+    # Functions configurations
+    strategy:
+      matrix:
+        include:
+          - azure_api_id: 'liquid-api'
+            azure_api_path: '/liquid'
+            azure_api_name: 'Liquid API'
+            azure_api_spec_url: 'https://fn-liquid-dev.azurewebsites.net/api/openapi/v3.json'
+          - azure_api_id: 'solid-api'
+            azure_api_path: '/solid'
+            azure_api_name: 'Solid API'
+            azure_api_spec_url: 'https://fn-solid-dev.azurewebsites.net/api/openapi/v3.json'
+          - azure_api_id: 'solidud-api'
+            azure_api_path: '/solidus'
+            azure_api_name: 'Solidus API'
+            azure_api_spec_url: 'https://fn-solidus-dev.azurewebsites.net/api/openapi/v3.json'
+    
+    # Azure API Import configuration (optional)
+    env:
+        AZURE_RG: ${{ secrets.AZURE_RESOURCE_GROUP }} # Resource group name
+        AZURE_API_SERVICE: ${{ secrets.AZURE_API_MANAGER }} # API Manager ID
+        AZURE_API_ID: ${{ matrix.azure_api_id }}
+        AZURE_API_PATH: ${{ matrix.azure_api_path }}
+        AZURE_API_NAME: ${{ matrix.azure_api_name }}
+        AZURE_API_SPEC_URL: ${{ matrix.azure_api_spec_url }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Login to Azure using secrets credentials
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Run Azure CLI command to import an API definition from an OpenID definition file
+      - name: Run Azure API Import (CLI)
+        run: |
+          az apim api import --path $AZURE_API_PATH --api-id $AZURE_API_ID -g $AZURE_RG -n $AZURE_API_SERVICE --display-name "$AZURE_API_NAME" --specification-url "$AZURE_API_SPEC_URL" --specification-format OpenAPI --protocols https
+       
+      # Azure logout
+      - name: logout
+        run: |
+              az logout
+        if: always()
