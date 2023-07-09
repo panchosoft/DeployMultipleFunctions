@@ -80,7 +80,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     
-    # Functions configurations
+    # API Management configuration for each function (optional)
     strategy:
       matrix:
         include:
@@ -97,7 +97,7 @@ jobs:
             azure_api_name: 'Solidus API'
             azure_api_spec_url: 'https://fn-solidus-dev.azurewebsites.net/api/openapi/v3.json'
     
-    # Azure API Import configuration (optional)
+    # Azure API Import configuration
     env:
         AZURE_RG: ${{ secrets.AZURE_RESOURCE_GROUP }} # Resource group name
         AZURE_API_SERVICE: ${{ secrets.AZURE_API_MANAGER }} # API Manager ID
