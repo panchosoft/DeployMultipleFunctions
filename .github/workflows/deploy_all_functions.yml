@@ -92,7 +92,7 @@ jobs:
             azure_api_path: '/solid'
             azure_api_name: 'Solid API'
             azure_api_spec_url: 'https://fn-solid-dev.azurewebsites.net/api/openapi/v3.json'
-          - azure_api_id: 'solidud-api'
+          - azure_api_id: 'solidus-api'
             azure_api_path: '/solidus'
             azure_api_name: 'Solidus API'
             azure_api_spec_url: 'https://fn-solidus-dev.azurewebsites.net/api/openapi/v3.json'
