@@ -1,0 +1,107 @@
+# GitHub action that builds and deploys an Azure Function App
+# Author: Francisco Leyva
+name: Deploy Solidus Functions to Azure
+
+# Controls when the workflow will run
+on:
+    # Triggers the workflow on push or pull request events but only for the "main" branch
+    push:
+        branches: [ "main" ]
+        paths:
+        - "SolidusFunctions/**"
+
+    # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
+      inputs:
+        # Update API Manager with the function endpoints (OpenAPI)
+        update_api:
+          type: boolean
+          required: true
+          default: false
+          description: Update API Endpoints
+
+env:
+    # Azure functions configuration
+    AZURE_FUNCTIONAPP_NAME : 'fn-solidus-dev'
+    AZURE_FUNCTIONAPP_PACKAGE_PATH: 'SolidusFunctions' # set this to the path to your web app project, defaults to the repository root
+    DOTNET_VERSION: '6.0.x' # set this to the dotnet version to use
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This job builds and deploy an azure function to Azure
+  build-and-deploy:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Login to Azure using secrets credentials
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }} # Your Azure credentials
+
+      # Setup dotnet command
+      - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      # Build Azure Function
+      - name: 'Run dotnet'
+        shell: pwsh
+        run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          dotnet build --configuration Release --output ./output
+          popd
+      # Deploy build to Azure function app environment
+      - name: 'Run Azure Functions Action'
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+          package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
+  
+       # Azure logout
+      - name: logout
+        run: |
+              az logout
+        if: always()
+
+  # This job updates the Azure (APIM) API with the OpenAPI definition file
+  # coming from the Azure Function
+  update-api:
+    needs: build-and-deploy
+    if: inputs.update_api
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    
+    # Azure API Import configuration (optional)
+    env:
+        AZURE_RG: ${{ secrets.AZURE_RESOURCE_GROUP }} # Resource group name
+        AZURE_API_SERVICE: ${{ secrets.AZURE_API_MANAGER }} # API Manager ID
+        AZURE_API_ID: 'solidus-api'
+        AZURE_API_PATH: '/solidus'
+        AZURE_API_NAME: 'Solidus API'
+        AZURE_API_SPEC_URL: 'https://fn-solidus-dev.azurewebsites.net/api/openapi/v3.json'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Login to Azure using secrets credentials
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Run Azure CLI command to import an API definition from an OpenID definition file
+      - name: Run Azure API Import (CLI)
+        run: |
+          az apim api import --path $AZURE_API_PATH --api-id $AZURE_API_ID -g $AZURE_RG -n $AZURE_API_SERVICE --display-name "$AZURE_API_NAME" --specification-url "$AZURE_API_SPEC_URL" --specification-format OpenAPI --protocols https
+       
+      # Azure logout
+      - name: logout
+        run: |
+              az logout
+        if: always()
