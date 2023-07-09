@@ -75,15 +75,15 @@ jobs:
     if: inputs.update_api
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    env: 
-        # Azure API Import configuration (optional)
+    
+    # Azure API Import configuration (optional)
+    env:
         AZURE_RG: ${{ secrets.AZURE_RESOURCE_GROUP }} # Resource group name
         AZURE_API_SERVICE: ${{ secrets.AZURE_API_MANAGER }} # API Manager ID
         AZURE_API_ID: 'liquid-api'
         AZURE_API_PATH: '/liquid'
         AZURE_API_NAME: 'Liquid API'
-        AZURE_API_SPEC_URL: 'https://{{ env.AZURE_FUNCTIONAPP_NAME }}.azurewebsites.net/api/openapi/v3.json'
+        AZURE_API_SPEC_URL: 'https://${{ env.AZURE_FUNCTIONAPP_NAME }}.azurewebsites.net/api/openapi/v3.json'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
