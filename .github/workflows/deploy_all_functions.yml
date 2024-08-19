@@ -15,7 +15,7 @@ on:
           description: Update API Endpoints
 
 env:
-    DOTNET_VERSION: '6.0.x' # set this to the dotnet version to use
+    DOTNET_VERSION: '8.0.x' # set this to the dotnet version to use
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:

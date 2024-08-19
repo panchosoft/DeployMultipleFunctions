@@ -24,7 +24,7 @@ env:
     # Azure functions configuration
     AZURE_FUNCTIONAPP_NAME : 'fn-solidus-dev'
     AZURE_FUNCTIONAPP_PACKAGE_PATH: 'SolidusFunctions' # set this to the path to your web app project, defaults to the repository root
-    DOTNET_VERSION: '6.0.x' # set this to the dotnet version to use
+    DOTNET_VERSION: '8.0.x' # set this to the dotnet version to use
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
