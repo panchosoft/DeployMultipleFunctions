@@ -1,13 +1,13 @@
-# Azure Deployment with Bicep
+# 🚀 Azure Deployment with Bicep
 
 This guide explains how to deploy Azure resources using a Bicep script.
 
-## Prerequisites
+## ✅ Prerequisites
 
 - **Azure CLI** installed ([Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli))
 - Logged in to Azure CLI: `az login`
 
-## Steps
+## 🛠️ Steps
 
 ### 1. Clone the Repo
 
@@ -51,7 +51,7 @@ After deployment, verify that the resources have been created by navigating to t
 az resource list --resource-group <ResourceGroupName>
 ```
 
-### Troubleshooting
+### 🛠️ Troubleshooting
 
 If you encounter any issues during the deployment, ensure that:
 
