@@ -1,0 +1,88 @@
+name: Create Azure Resources
+on: 
+  workflow_dispatch:
+    inputs:
+      # Validate the bicep scripts and (optionally) create the Azure resources
+      DEPLOYMENT_MODE:
+        description: 'Deployment Mode'
+        type: choice
+        required: true
+        default: 'validate'
+        options: 
+        - 'validate'
+        - 'validate and deploy'
+      # Azure region to deploy most of the Azure resources
+      AZURE_REGION: 
+        description: 'Azure Region to deploy resources (e.g. eastus)'
+        required: true    
+        default: 'eastus'
+      # Azure resource group where the services in the bicep scripts will be created
+      RESOURCE_GROUP_NAME: 
+        description: 'Azure Resource Group to deploy resources'
+        required: true
+        default: 'rg-functionsdemo-dev'
+      # Azure services suffix
+      ENVIRONMENT_TYPE: 
+        type: choice
+        description: 'Azure Environment'
+        required: true
+        default: 'dev'
+        options: 
+        - 'dev'
+        - 'qa'
+        - 'uat'
+        - 'prod'
+  
+# CONFIGURATION
+# For help, go to https://github.com/Azure/Actions
+#
+# 1. Set up the following secrets in your repository:
+#   AZURE_CREDENTIALS
+#
+# 2. Change below variables for your configuration:
+env:
+  AZURE_REGION: ${{ github.event.inputs.AZURE_REGION }}
+  ENVIRONMENT_TYPE: ${{ github.event.inputs.ENVIRONMENT_TYPE }}
+  RESOURCE_GROUP_NAME: ${{ github.event.inputs.RESOURCE_GROUP_NAME }}
+  BICEP_FILE_PATH: './Infrastructure/main.bicep'
+  
+jobs:
+  validate_and_deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.ENVIRONMENT_TYPE }}
+    steps:
+    # Authentication
+    # Set up the following secrets in your repository: AZURE_CREDENTIALS
+    # For details on usage of secrets, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets
+    - name: Azure Login
+      uses: azure/login@v2.1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS  }}
+    
+    # Checkout
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    # Build ARM Template from Bicep and create a target Azure resource group  
+    - name: Validate Bicep file ${{ env.BICEP_FILE_PATH }}
+      uses: azure/CLI@v1
+      with:
+        # Specify the script here
+        inlineScript: |
+          az group create -l ${{ env.AZURE_REGION }} -n ${{ env.RESOURCE_GROUP_NAME }}
+          az deployment group validate -g ${{ env.RESOURCE_GROUP_NAME }} --name MGSBicepDeployment --template-file ./${{ env.BICEP_FILE_PATH }} --parameters environment=${{ env.ENVIRONMENT_TYPE }}
+
+    # Build ARM Template from Bicep and create a target Azure resource group  
+    - name: Deploy Bicep file ${{ env.BICEP_FILE_PATH }}
+      if: ${{ inputs.DEPLOYMENT_MODE == 'validate and deploy' }}
+      uses: azure/CLI@v1
+      with:
+        # Specify the script here
+        inlineScript: |
+          az deployment group create -g ${{ env.RESOURCE_GROUP_NAME }} --name MGSBicepDeployment --template-file ./${{ env.BICEP_FILE_PATH }} --parameters environment=${{ env.ENVIRONMENT_TYPE }}
+
+    # Azure logout
+    - name: logout
+      run: |
+            az logout
+      if: always()
