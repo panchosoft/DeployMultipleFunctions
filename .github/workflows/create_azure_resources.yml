@@ -55,17 +55,17 @@ jobs:
     # Set up the following secrets in your repository: AZURE_CREDENTIALS
     # For details on usage of secrets, please refer https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets
     - name: Azure Login
-      uses: azure/login@v2.1.1
+      uses: azure/login@v2.3.0
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS  }}
     
     # Checkout
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     # Build ARM Template from Bicep and create a target Azure resource group  
     - name: Validate Bicep file ${{ env.BICEP_FILE_PATH }}
-      uses: azure/CLI@v1
+      uses: azure/CLI@v2
       with:
         # Specify the script here
         inlineScript: |
@@ -75,7 +75,7 @@ jobs:
     # Build ARM Template from Bicep and create a target Azure resource group  
     - name: Deploy Bicep file ${{ env.BICEP_FILE_PATH }}
       if: ${{ inputs.DEPLOYMENT_MODE == 'validate and deploy' }}
-      uses: azure/CLI@v1
+      uses: azure/CLI@v2
       with:
         # Specify the script here
         inlineScript: |

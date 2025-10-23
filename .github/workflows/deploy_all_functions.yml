@@ -38,17 +38,17 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       # Login to Azure using secrets credentials
       - name: 'Login via Azure CLI'
-        uses: Azure/login@v2.1.1
+        uses: Azure/login@v2.3.0
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }} # Your Azure credentials
 
       # Setup dotnet command
       - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
@@ -61,7 +61,7 @@ jobs:
           popd
       # Deploy build to Azure function app environment
       - name: 'Run Azure Functions Action'
-        uses: Azure/functions-action@v1.5.2
+        uses: Azure/functions-action@v1.5.3
         with:
           app-name: ${{ matrix.function_name }}
           package: '${{ matrix.package_path }}/output'
@@ -110,7 +110,7 @@ jobs:
     steps:
       # Login to Azure using secrets credentials
       - name: 'Login via Azure CLI'
-        uses: Azure/login@v2.1.1
+        uses: Azure/login@v2.3.0
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
