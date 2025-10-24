@@ -2,7 +2,7 @@
 
 This repository demonstrates how to deploy a solution with multiple function apps into separate Azure Function App services using the power of GitHub Actions.
 
-The solution can be opened with Visual Studio 2022 or Visual Studio Code and it includes 3 sample function app projects (Liquid, Solid, and Solidus) written in C# and .NET 6.0.
+The solution can be opened with Visual Studio 2022 or Visual Studio Code and it includes 3 sample function app projects (Liquid, Solid, and Solidus) written in C# and .NET 8.0.
 
 ## 💻 Usage
 
