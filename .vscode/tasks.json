@@ -1,0 +1,212 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "clean all",
+            "dependsOn": [
+                "clean (solid-functions)",
+                "clean (liquid-functions)",
+                "clean (solidus-functions)"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "build all",
+            "dependsOn": [
+                "build (solid-functions)",
+                "build (liquid-functions)",
+                "build (solidus-functions)"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "clean (solid-functions)",
+            "command": "dotnet",
+            "args": [
+                "clean",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "type": "process",
+            "problemMatcher": "$msCompile",
+            "options": {
+                "cwd": "${workspaceFolder}/SolidFunctions"
+            }
+        },
+        {
+            "label": "build (solid-functions)",
+            "command": "dotnet",
+            "args": [
+                "build",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "type": "process",
+            "dependsOn": "clean (solid-functions)",
+            "group": "build",
+            "problemMatcher": "$msCompile",
+            "options": {
+                "cwd": "${workspaceFolder}/SolidFunctions"
+            }
+        },
+        {
+            "label": "clean (liquid-functions)",
+            "command": "dotnet",
+            "args": [
+                "clean",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "type": "process",
+            "problemMatcher": "$msCompile",
+            "options": {
+                "cwd": "${workspaceFolder}/LiquidFunctions"
+            }
+        },
+        {
+            "label": "build (liquid-functions)",
+            "command": "dotnet",
+            "args": [
+                "build",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "type": "process",
+            "dependsOn": "clean (liquid-functions)",
+            "group": "build",
+            "problemMatcher": "$msCompile",
+            "options": {
+                "cwd": "${workspaceFolder}/LiquidFunctions"
+            }
+        },
+        {
+            "label": "clean (solidus-functions)",
+            "command": "dotnet",
+            "args": [
+                "clean",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "type": "process",
+            "problemMatcher": "$msCompile",
+            "options": {
+                "cwd": "${workspaceFolder}/SolidusFunctions"
+            }
+        },
+        {
+            "label": "build (solidus-functions)",
+            "command": "dotnet",
+            "args": [
+                "build",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "type": "process",
+            "dependsOn": "clean (solidus-functions)",
+            "group": "build",
+            "problemMatcher": "$msCompile",
+            "options": {
+                "cwd": "${workspaceFolder}/SolidusFunctions"
+            }
+        },
+        {
+            "label": "publish all",
+            "dependsOn": [
+                "publish (solid-functions)",
+                "publish (liquid-functions)",
+                "publish (solidus-functions)"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "publish (solid-functions)",
+            "command": "dotnet",
+            "args": [
+                "publish",
+                "--configuration",
+                "Release",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "type": "process",
+            "problemMatcher": "$msCompile",
+            "options": {
+                "cwd": "${workspaceFolder}/SolidFunctions"
+            }
+        },
+        {
+            "label": "publish (liquid-functions)",
+            "command": "dotnet",
+            "args": [
+                "publish",
+                "--configuration",
+                "Release",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "type": "process",
+            "problemMatcher": "$msCompile",
+            "options": {
+                "cwd": "${workspaceFolder}/LiquidFunctions"
+            }
+        },
+        {
+            "label": "publish (solidus-functions)",
+            "command": "dotnet",
+            "args": [
+                "publish",
+                "--configuration",
+                "Release",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "type": "process",
+            "problemMatcher": "$msCompile",
+            "options": {
+                "cwd": "${workspaceFolder}/SolidusFunctions"
+            }
+        },
+        {
+            "label": "start all functions",
+            "dependsOn": [
+                "func: solid-functions",
+                "func: liquid-functions",
+                "func: solidus-functions"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "func: solid-functions",
+            "type": "func",
+            "dependsOn": "build (solid-functions)",
+            "options": {
+                "cwd": "${workspaceFolder}/SolidFunctions/bin/Debug/net8.0"
+            },
+            "command": "host start",
+            "isBackground": true,
+            "problemMatcher": "$func-dotnet-watch"
+        },
+        {
+            "label": "func: liquid-functions",
+            "type": "func",
+            "dependsOn": "build (liquid-functions)",
+            "options": {
+                "cwd": "${workspaceFolder}/LiquidFunctions/bin/Debug/net8.0"
+            },
+            "command": "host start --port 7072",
+            "isBackground": true,
+            "problemMatcher": "$func-dotnet-watch"
+        },
+        {
+            "label": "func: solidus-functions",
+            "type": "func",
+            "dependsOn": "build (solidus-functions)",
+            "options": {
+                "cwd": "${workspaceFolder}/SolidusFunctions/bin/Debug/net8.0"
+            },
+            "command": "host start --port 7073",
+            "isBackground": true,
+            "problemMatcher": "$func-dotnet-watch"
+        }
+    ]
+}

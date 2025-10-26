@@ -1,0 +1,51 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Attach to Solid Functions",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:azureFunctions.pickProcess}",
+            "presentation": {
+                "group": "1_functions",
+                "order": 1
+            }
+        },
+        {
+            "name": "Attach to Liquid Functions",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:azureFunctions.pickProcess}",
+            "presentation": {
+                "group": "1_functions",
+                "order": 2
+            }
+        },
+        {
+            "name": "Attach to Solidus Functions",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:azureFunctions.pickProcess}",
+            "presentation": {
+                "group": "1_functions",
+                "order": 3
+            }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Debug All Functions",
+            "configurations": [
+                "Attach to Solid Functions",
+                "Attach to Liquid Functions",
+                "Attach to Solidus Functions"
+            ],
+            "presentation": {
+                "group": "1_functions",
+                "order": 1
+            },
+            "preLaunchTask": "start all functions",
+            "stopAll": true
+        }
+    ]
+}

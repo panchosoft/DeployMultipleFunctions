@@ -1,0 +1,11 @@
+{
+    "recommendations": [
+        "ms-azuretools.vscode-azurefunctions",
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.vscode-dotnet-runtime",
+        "ms-vscode.azure-account",
+        "ms-vscode.powershell",
+        "ms-vscode.azurecli",
+        "ms-azuretools.vscode-bicep"
+    ]
+}
