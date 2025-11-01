@@ -17,5 +17,6 @@
         "editor.defaultFormatter": "ms-dotnettools.csharp",
         "editor.formatOnSave": true,
         "editor.formatOnType": true
-    }
+    },
+    "azureFunctions.projectSubpath": "SolidFunctions"
 }
