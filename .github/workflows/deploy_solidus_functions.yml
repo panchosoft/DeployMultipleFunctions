@@ -40,13 +40,13 @@ jobs:
 
       # Login to Azure using secrets credentials
       - name: 'Login via Azure CLI'
-        uses: Azure/login@v2.3.0
+        uses: Azure/login@v3
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }} # Your Azure credentials
 
       # Setup dotnet command
       - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
@@ -59,7 +59,7 @@ jobs:
           popd
       # Deploy build to Azure function app environment
       - name: 'Run Azure Functions Action'
-        uses: Azure/functions-action@v1.5.3
+        uses: Azure/functions-action@v1.5.7
         with:
           app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
           package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
@@ -91,7 +91,7 @@ jobs:
     steps:
       # Login to Azure using secrets credentials
       - name: 'Login via Azure CLI'
-        uses: Azure/login@v2.3.0
+        uses: Azure/login@v3
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
