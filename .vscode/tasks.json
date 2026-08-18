@@ -180,7 +180,7 @@
             "type": "func",
             "dependsOn": "build (solid-functions)",
             "options": {
-                "cwd": "${workspaceFolder}/SolidFunctions/bin/Debug/net8.0"
+                "cwd": "${workspaceFolder}/SolidFunctions/bin/Debug/net10.0"
             },
             "command": "host start",
             "isBackground": true,
@@ -191,7 +191,7 @@
             "type": "func",
             "dependsOn": "build (liquid-functions)",
             "options": {
-                "cwd": "${workspaceFolder}/LiquidFunctions/bin/Debug/net8.0"
+                "cwd": "${workspaceFolder}/LiquidFunctions/bin/Debug/net10.0"
             },
             "command": "host start --port 7072",
             "isBackground": true,
@@ -202,7 +202,7 @@
             "type": "func",
             "dependsOn": "build (solidus-functions)",
             "options": {
-                "cwd": "${workspaceFolder}/SolidusFunctions/bin/Debug/net8.0"
+                "cwd": "${workspaceFolder}/SolidusFunctions/bin/Debug/net10.0"
             },
             "command": "host start --port 7073",
             "isBackground": true,

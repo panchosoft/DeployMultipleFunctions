@@ -8,7 +8,7 @@ This is an Azure Functions solution demonstrating deployment of multiple indepen
 
 ## Technology Stack
 
-- **Runtime**: .NET 8.0
+- **Runtime**: .NET 10.0
 - **Azure Functions**: v4 runtime
 - **Infrastructure**: Azure Bicep (Infrastructure as Code)
 - **Deployment**: GitHub Actions
@@ -44,15 +44,15 @@ Build all function apps using VS Code task:
 Start individual function apps with Azure Functions Core Tools:
 ```bash
 # SolidFunctions (default port 7071)
-cd SolidFunctions/bin/Debug/net8.0
+cd SolidFunctions/bin/Debug/net10.0
 func host start
 
 # LiquidFunctions (port 7072)
-cd LiquidFunctions/bin/Debug/net8.0
+cd LiquidFunctions/bin/Debug/net10.0
 func host start --port 7072
 
 # SolidusFunctions (port 7073)
-cd SolidusFunctions/bin/Debug/net8.0
+cd SolidusFunctions/bin/Debug/net10.0
 func host start --port 7073
 ```
 
